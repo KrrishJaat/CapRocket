@@ -4,7 +4,7 @@ import MediaLibrary from './components/MediaLibrary.jsx';
 import Preview from './components/Preview.jsx';
 import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
-import ExportDialog from './components/ExportDialog.jsx';
+import ExportDialog, { captionsToSrt } from './components/ExportDialog.jsx';
 
 export default function App() {
   const [state, dispatch] = useReducer(historyReducer, { past: [], present: emptyProject(), future: [] });
@@ -88,16 +88,23 @@ export default function App() {
   };
 
   const startExport = async () => {
-    if (!project.videoClips.length) return alert('Zid chi vidéo l-timeline 9bel l-export.');
+    if (!project.videoClips.length) return alert('Add a video to the timeline before exporting.');
     setPlaying(false);
     setExporting({ progress: 0 });
     const off = window.api.onExportProgress((p) => setExporting((e) => e && { ...e, progress: p }));
     const res = await window.api.exportVideo(project);
     off();
     if (res.canceled) return setExporting(null);
-    setExporting(res.ok ? { done: true, file: res.file, progress: 1 } : { error: res.error });
+    const captions = project.textClips.map((clip) => ({
+      start: clip.start,
+      end: clip.start + clip.duration,
+      text: clip.text,
+    })).filter((caption) => caption.text?.trim());
+    const srtText = captionsToSrt(captions);
+    setExporting(res.ok
+      ? { done: true, file: res.file, progress: 1, srt: srtText }
+      : { error: res.error });
   };
-
   // Hook used by the automated smoke test (electron/smoke.cjs).
   useEffect(() => {
     window.__fve = {

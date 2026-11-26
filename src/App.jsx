@@ -107,7 +107,11 @@ export default function App() {
   keys.current = { togglePlay, split, remove, seek, time };
   useEffect(() => {
     const onKey = (e) => {
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      const target = e.target;
+      const tag = target?.tagName;
+      const isTextEntry = ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) &&
+        (tag !== 'INPUT' || !['range', 'checkbox', 'radio', 'button', 'submit'].includes(target.type));
+      if (isTextEntry || target?.isContentEditable) return;
       const k = keys.current;
       if (e.code === 'Space') { e.preventDefault(); k.togglePlay(); }
       else if ((e.ctrlKey && e.key.toLowerCase() === 'b') || e.key.toLowerCase() === 's' && !e.ctrlKey) { e.preventDefault(); k.split(); }

@@ -15,6 +15,8 @@ export default function App() {
   const [exporting, setExporting] = useState(null);
   const [verticalLayout, setVerticalLayout] = useState(false);
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+  const [verticalLayout, setVerticalLayout] = useState(false);
+  const [timelineCollapsed, setTimelineCollapsed] = useState(false);
   const duration = projectDuration(project);
 
   const [seekVer, setSeekVer] = useState(0);
@@ -133,6 +135,7 @@ export default function App() {
         <div className="brand">▶ Free Video Editor</div>
         <div className="actions">
           <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait editing layout">{verticalLayout ? '16:9 Layout' : '9:16 Layout'}</button>
+          <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait workspace">{verticalLayout ? 'Landscape UI' : 'Portrait UI'}</button>
           <button onClick={open}>Open</button>
           <button onClick={save}>Save</button>
           <button onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Ctrl+Z">↶</button>
@@ -141,7 +144,8 @@ export default function App() {
         </div>
       </header>
 
-      <div className="workspace">
+      <div className={`workspace${verticalLayout ? ' vertical-layout' : ''}`}>
+        <div className="layout-switch" style={{ display: 'none' }} />
         <MediaLibrary media={project.media} onImport={importMedia} onAdd={addToTimeline} onAddText={addText}
           onRemove={(id) => dispatch({ type: 'removeMedia', id })} />
         <Preview project={project} time={time} seekVer={seekVer} playing={playing} duration={duration}

@@ -13,7 +13,6 @@ export default function App() {
   const [playing, setPlaying] = useState(false);
   const [selection, setSelection] = useState(null); // { track, id }
   const [exporting, setExporting] = useState(null);
-  const [verticalLayout, setVerticalLayout] = useState(false);
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
   const duration = projectDuration(project);
 

@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('api', {
   exportVideo: (project) => ipcRenderer.invoke('export:start', project),
   cancelExport: () => ipcRenderer.invoke('export:cancel'),
   showInFolder: (file) => ipcRenderer.invoke('shell:show', file),
+  copyText: (text) => ipcRenderer.invoke('captions:copy', text),
   onExportProgress: (cb) => {
     const handler = (_e, p) => cb(p);
     ipcRenderer.on('export:progress', handler);

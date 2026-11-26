@@ -4,7 +4,7 @@ import MediaLibrary from './components/MediaLibrary.jsx';
 import Preview from './components/Preview.jsx';
 import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
-import ExportDialog from './components/ExportDialog.jsx';
+import ExportDialog, { captionsToSrt } from './components/ExportDialog.jsx';
 
 export default function App() {
   const [state, dispatch] = useReducer(historyReducer, { past: [], present: emptyProject(), future: [] });
@@ -13,6 +13,8 @@ export default function App() {
   const [playing, setPlaying] = useState(false);
   const [selection, setSelection] = useState(null); // { track, id }
   const [exporting, setExporting] = useState(null);
+  const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+  const [verticalLayout, setVerticalLayout] = useState(false);
   const duration = projectDuration(project);
 
   const [seekVer, setSeekVer] = useState(0);
@@ -80,16 +82,23 @@ export default function App() {
   };
 
   const startExport = async () => {
-    if (!project.videoClips.length) return alert('Zid chi vidéo l-timeline 9bel l-export.');
+    if (!project.videoClips.length) return alert('Add a video to the timeline before exporting.');
     setPlaying(false);
     setExporting({ progress: 0 });
     const off = window.api.onExportProgress((p) => setExporting((e) => e && { ...e, progress: p }));
     const res = await window.api.exportVideo(project);
     off();
     if (res.canceled) return setExporting(null);
-    setExporting(res.ok ? { done: true, file: res.file, progress: 1 } : { error: res.error });
+    const captions = project.textClips.map((clip) => ({
+      start: clip.start,
+      end: clip.start + clip.duration,
+      text: clip.text,
+    })).filter((caption) => caption.text?.trim());
+    const srtText = captionsToSrt(captions);
+    setExporting(res.ok
+      ? { done: true, file: res.file, progress: 1, srt: srtText }
+      : { error: res.error });
   };
-
   // Hook used by the automated smoke test (electron/smoke.cjs).
   useEffect(() => {
     window.__fve = {
@@ -107,7 +116,11 @@ export default function App() {
   keys.current = { togglePlay, split, remove, seek, time };
   useEffect(() => {
     const onKey = (e) => {
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      const target = e.target;
+      const tag = target?.tagName;
+      const isTextEntry = ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) &&
+        (tag !== 'INPUT' || !['range', 'checkbox', 'radio', 'button', 'submit'].includes(target.type));
+      if (isTextEntry || target?.isContentEditable) return;
       const k = keys.current;
       if (e.code === 'Space') { e.preventDefault(); k.togglePlay(); }
       else if ((e.ctrlKey && e.key.toLowerCase() === 'b') || e.key.toLowerCase() === 's' && !e.ctrlKey) { e.preventDefault(); k.split(); }
@@ -126,6 +139,7 @@ export default function App() {
       <header className="topbar">
         <div className="brand">▶ Free Video Editor</div>
         <div className="actions">
+          <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait editing workspace">{verticalLayout ? 'Landscape UI' : 'Portrait UI'}</button>
           <button onClick={open}>Open</button>
           <button onClick={save}>Save</button>
           <button onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Ctrl+Z">↶</button>
@@ -134,7 +148,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="workspace">
+      <div className={`workspace${verticalLayout ? ' vertical-layout' : ''}`}>
         <MediaLibrary media={project.media} onImport={importMedia} onAdd={addToTimeline} onAddText={addText}
           onRemove={(id) => dispatch({ type: 'removeMedia', id })} />
         <Preview project={project} time={time} seekVer={seekVer} playing={playing} duration={duration}
@@ -142,9 +156,27 @@ export default function App() {
         <Inspector project={project} selection={selection} dispatch={dispatch} />
       </div>
 
-      <Timeline project={project} time={time} duration={duration} selection={selection}
-        onSelect={setSelection} onSeek={seek} dispatch={dispatch}
-        onSplit={split} onDelete={remove} onAddText={addText} />
+      <div className={`timeline-shell${timelineCollapsed ? ' collapsed' : ''}`}>
+        <div className="timeline-shell-toolbar">
+          <button onClick={() => setTimelineCollapsed((v) => !v)}>
+            {timelineCollapsed ? 'Show timeline' : 'Minimize timeline'}
+          </button>
+        </div>
+        {!timelineCollapsed && (
+          <Timeline
+            project={project}
+            time={time}
+            duration={duration}
+            selection={selection}
+            onSelect={setSelection}
+            onSeek={seek}
+            dispatch={dispatch}
+            onSplit={split}
+            onDelete={remove}
+            onAddText={addText}
+          />
+        )}
+      </div>
 
       {exporting && <ExportDialog state={exporting} onCancel={() => window.api.cancelExport()}
         onClose={() => setExporting(null)} onShow={() => window.api.showInFolder(exporting.file)} />}

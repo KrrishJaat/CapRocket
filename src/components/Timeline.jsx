@@ -5,6 +5,9 @@ const HEADER = 84;
 
 export default function Timeline({ project, time, duration, selection, onSelect, onSeek, dispatch, onSplit, onDelete, onAddText }) {
   const [pps, setPps] = useState(60); // pixels per second (zoom)
+  const [showText, setShowText] = useState(true);
+  const [showVideo, setShowVideo] = useState(true);
+  const [showAudio, setShowAudio] = useState(true);
   const scrollRef = useRef(null);
   const mediaById = Object.fromEntries(project.media.map((m) => [m.id, m]));
   const layout = videoLayout(project.videoClips);
@@ -96,7 +99,10 @@ export default function Timeline({ project, time, duration, selection, onSelect,
       <div className="tl-toolbar">
         <button onClick={onSplit} title="Ctrl+B / S">✂ Split</button>
         <button onClick={onDelete} disabled={!selection} title="Delete">🗑 Delete</button>
-        <button onClick={onAddText}>T+ Texte</button>
+        <button onClick={onAddText}>T+ Text</button>
+        <button onClick={() => setShowText((v) => !v)}>{showText ? 'Hide text track' : 'Show text track'}</button>
+        <button onClick={() => setShowVideo((v) => !v)}>{showVideo ? 'Hide video track' : 'Show video track'}</button>
+        <button onClick={() => setShowAudio((v) => !v)}>{showAudio ? 'Hide audio track' : 'Show audio track'}</button>
         <div className="spacer" />
         <span className="dim">Zoom</span>
         <input type="range" min="10" max="300" value={pps} onChange={(e) => setPps(Number(e.target.value))} />
@@ -112,17 +118,17 @@ export default function Timeline({ project, time, duration, selection, onSelect,
             </div>
           </div>
 
-          <div className="tl-row">
-            <div className="tl-head">Texte</div>
+          {showText && <div className="tl-row">
+            <div className="tl-head">Text</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {project.textClips.map((c) => (
                 <Clip pps={pps} selection={selection} key={c.id} track="text" clip={c} start={c.start} length={c.duration} label={c.text}
                   onDown={(e, mode) => startFreeDrag(e, 'text', c, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
-          <div className="tl-row main">
+          {showVideo && <div className="tl-row main">
             <div className="tl-head">Vidéo</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {layout.map((l) => (
@@ -130,17 +136,17 @@ export default function Timeline({ project, time, duration, selection, onSelect,
                   label={mediaById[l.clip.mediaId]?.name ?? '?'} onDown={(e, mode) => startVideoDrag(e, l.clip, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
-          <div className="tl-row">
-            <div className="tl-head">Musique</div>
+          {showAudio && <div className="tl-row">
+            <div className="tl-head">Audio</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {project.audioClips.map((c) => (
                 <Clip pps={pps} selection={selection} key={c.id} track="audio" clip={c} start={c.start} length={c.out - c.in}
                   label={'♪ ' + (mediaById[c.mediaId]?.name ?? '?')} onDown={(e, mode) => startFreeDrag(e, 'audio', c, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
           <div className="playhead" style={{ left: HEADER + time * pps }} />
         </div>

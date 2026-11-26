@@ -144,8 +144,6 @@ input[type='range'] { accent-color: var(--accent); width: 100%; }
 
 
 /* Issue #5: portrait editing and compact timeline */
-.workspace.vertical-layout { grid-template-columns: 240px minmax(0, 1fr) 240px; }
-.workspace.vertical-layout .preview .stage { aspect-ratio: 9 / 16 !important; }
 .timeline-shell { display: flex; flex-direction: column; min-height: 0; border-top: 1px solid var(--border); }
 .timeline-shell-toolbar { display: flex; justify-content: flex-end; padding: 2px 8px; background: var(--panel); }
 .timeline-shell-toolbar button { font-size: 11px; padding: 3px 8px; }

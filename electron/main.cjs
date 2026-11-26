@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, clipboard } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { probe, runExport } = require('./ffmpeg.cjs');
@@ -99,6 +99,11 @@ ipcMain.handle('export:cancel', () => {
   currentExport.cancel();
 });
 ipcMain.handle('shell:show', (_e, file) => shell.showItemInFolder(file));
+ipcMain.handle('captions:copy', (_e, text) => {
+  clipboard.writeText(String(text ?? ''));
+  return true;
+});
+
 
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => app.quit());

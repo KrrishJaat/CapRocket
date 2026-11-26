@@ -17,6 +17,8 @@ export default function App() {
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
   const [verticalLayout, setVerticalLayout] = useState(false);
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+  const [verticalLayout, setVerticalLayout] = useState(false);
+  const [timelineCollapsed, setTimelineCollapsed] = useState(false);
   const duration = projectDuration(project);
 
   const [seekVer, setSeekVer] = useState(0);
@@ -136,6 +138,7 @@ export default function App() {
         <div className="actions">
           <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait editing layout">{verticalLayout ? '16:9 Layout' : '9:16 Layout'}</button>
           <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait workspace">{verticalLayout ? 'Landscape UI' : 'Portrait UI'}</button>
+          <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait editing workspace">{verticalLayout ? 'Landscape UI' : 'Portrait UI'}</button>
           <button onClick={open}>Open</button>
           <button onClick={save}>Save</button>
           <button onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Ctrl+Z">↶</button>

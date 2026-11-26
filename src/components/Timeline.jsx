@@ -8,8 +8,6 @@ export default function Timeline({ project, time, duration, selection, onSelect,
   const [showText, setShowText] = useState(true);
   const [showVideo, setShowVideo] = useState(true);
   const [showAudio, setShowAudio] = useState(true);
-  const [showText, setShowText] = useState(true);
-  const [showVideo, setShowVideo] = useState(true);
   const [showAudio, setShowAudio] = useState(true);
   const scrollRef = useRef(null);
   const mediaById = Object.fromEntries(project.media.map((m) => [m.id, m]));

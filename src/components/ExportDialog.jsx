@@ -22,7 +22,7 @@ export default function ExportDialog({ state, onCancel, onClose, onShow }) {
   const [copied, setCopied] = useState(false);
   const copyPath = async () => {
     if (!state.srt) return;
-    await navigator.clipboard.writeText(state.srt);
+    await window.api.copyText(state.srt);
     setCopied(true);
   };
   const downloadSrt = () => {

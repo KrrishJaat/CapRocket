@@ -157,10 +157,25 @@ export default function App() {
       </div>
 
       <div className={`timeline-shell${timelineCollapsed ? ' collapsed' : ''}`}>
-        <div className="timeline-shell-toolbar"><button onClick={() => setTimelineCollapsed((v) => !v)}>{timelineCollapsed ? 'Show timeline' : 'Minimize timeline'}</button></div>
-        {!timelineCollapsed && <Timeline project={project} time={time} duration={duration} selection={selection}
-          onSelect={setSelection} onSeek={seek} dispatch={dispatch}
-          onSplit={split} onDelete={remove} onAddText={addText} />}
+        <div className="timeline-shell-toolbar">
+          <button onClick={() => setTimelineCollapsed((v) => !v)}>
+            {timelineCollapsed ? 'Show timeline' : 'Minimize timeline'}
+          </button>
+        </div>
+        {!timelineCollapsed && (
+          <Timeline
+            project={project}
+            time={time}
+            duration={duration}
+            selection={selection}
+            onSelect={setSelection}
+            onSeek={seek}
+            dispatch={dispatch}
+            onSplit={split}
+            onDelete={remove}
+            onAddText={addText}
+          />
+        )}
       </div>
 
       {exporting && <ExportDialog state={exporting} onCancel={() => window.api.cancelExport()}

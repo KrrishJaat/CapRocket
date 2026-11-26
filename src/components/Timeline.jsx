@@ -119,17 +119,17 @@ export default function Timeline({ project, time, duration, selection, onSelect,
             </div>
           </div>
 
-          <div className="tl-row">
-            <div className="tl-head">Texte</div>
+          {showText && <div className="tl-row">
+            <div className="tl-head">Text</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {project.textClips.map((c) => (
                 <Clip pps={pps} selection={selection} key={c.id} track="text" clip={c} start={c.start} length={c.duration} label={c.text}
                   onDown={(e, mode) => startFreeDrag(e, 'text', c, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
-          <div className="tl-row main">
+          {showVideo && <div className="tl-row main">
             <div className="tl-head">Vidéo</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {layout.map((l) => (
@@ -137,17 +137,17 @@ export default function Timeline({ project, time, duration, selection, onSelect,
                   label={mediaById[l.clip.mediaId]?.name ?? '?'} onDown={(e, mode) => startVideoDrag(e, l.clip, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
-          <div className="tl-row">
-            <div className="tl-head">Musique</div>
+          {showAudio && <div className="tl-row">
+            <div className="tl-head">Audio</div>
             <div className="tl-lane" onPointerDown={scrub}>
               {project.audioClips.map((c) => (
                 <Clip pps={pps} selection={selection} key={c.id} track="audio" clip={c} start={c.start} length={c.out - c.in}
                   label={'♪ ' + (mediaById[c.mediaId]?.name ?? '?')} onDown={(e, mode) => startFreeDrag(e, 'audio', c, mode)} />
               ))}
             </div>
-          </div>
+          </div>}
 
           <div className="playhead" style={{ left: HEADER + time * pps }} />
         </div>

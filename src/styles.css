@@ -142,22 +142,8 @@ input[type='range'] { accent-color: var(--accent); width: 100%; }
 .error { text-align: left; max-height: 240px; overflow: auto; font-size: 11px; background: #000; padding: 8px; white-space: pre-wrap; user-select: text; }
 
 
-/* Issue #5: portrait editing and timeline visibility */
-.timeline-shell { display: flex; flex-direction: column; min-height: 0; }
-.timeline-toggle {
-  align-self: flex-end;
-  margin: 3px 8px;
-  padding: 3px 9px;
-  font-size: 11px;
-}
-.app { grid-template-rows: 46px minmax(0, 1fr) 300px; }
-.app.timeline-collapsed { grid-template-rows: 46px minmax(0, 1fr) 26px; }
-.app.timeline-collapsed .timeline { display: none; }
-.app.vertical-layout .workspace { grid-template-columns: 240px minmax(0, 1fr) 240px; }
-.app.vertical-layout .stage { aspect-ratio: 9 / 16 !important; }
-.app.vertical-layout .preview { min-width: 0; }
 
-/* Issue #5: portrait workspace + compact timeline */
+/* Issue #5: portrait editing and compact timeline */
 .workspace.vertical-layout { grid-template-columns: 240px minmax(0, 1fr) 240px; }
 .workspace.vertical-layout .preview .stage { aspect-ratio: 9 / 16 !important; }
 .timeline-shell { display: flex; flex-direction: column; min-height: 0; border-top: 1px solid var(--border); }
@@ -165,3 +151,4 @@ input[type='range'] { accent-color: var(--accent); width: 100%; }
 .timeline-shell-toolbar button { font-size: 11px; padding: 3px 8px; }
 .timeline-shell.collapsed { min-height: 0; }
 .timeline-shell.collapsed .timeline-shell-toolbar { min-height: 26px; }
+.app { grid-template-rows: 46px minmax(0, 1fr) 300px; }

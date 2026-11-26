@@ -13,6 +13,8 @@ export default function App() {
   const [playing, setPlaying] = useState(false);
   const [selection, setSelection] = useState(null); // { track, id }
   const [exporting, setExporting] = useState(null);
+  const [verticalLayout, setVerticalLayout] = useState(false);
+  const [timelineCollapsed, setTimelineCollapsed] = useState(false);
   const duration = projectDuration(project);
 
   const [seekVer, setSeekVer] = useState(0);
@@ -130,6 +132,7 @@ export default function App() {
       <header className="topbar">
         <div className="brand">▶ Free Video Editor</div>
         <div className="actions">
+          <button onClick={() => setVerticalLayout((v) => !v)} title="Toggle portrait editing layout">{verticalLayout ? '16:9 Layout' : '9:16 Layout'}</button>
           <button onClick={open}>Open</button>
           <button onClick={save}>Save</button>
           <button onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Ctrl+Z">↶</button>
@@ -146,9 +149,12 @@ export default function App() {
         <Inspector project={project} selection={selection} dispatch={dispatch} />
       </div>
 
-      <Timeline project={project} time={time} duration={duration} selection={selection}
+      <div className="timeline-shell">
+        <button className="timeline-toggle" onClick={() => setTimelineCollapsed((v) => !v)}>{timelineCollapsed ? 'Show timeline' : 'Minimize timeline'}</button>
+        <Timeline project={project} time={time} duration={duration} selection={selection}
         onSelect={setSelection} onSeek={seek} dispatch={dispatch}
         onSplit={split} onDelete={remove} onAddText={addText} />
+      </div>
 
       {exporting && <ExportDialog state={exporting} onCancel={() => window.api.cancelExport()}
         onClose={() => setExporting(null)} onShow={() => window.api.showInFolder(exporting.file)} />}

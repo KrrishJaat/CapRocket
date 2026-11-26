@@ -5,6 +5,9 @@ const HEADER = 84;
 
 export default function Timeline({ project, time, duration, selection, onSelect, onSeek, dispatch, onSplit, onDelete, onAddText }) {
   const [pps, setPps] = useState(60); // pixels per second (zoom)
+  const [showText, setShowText] = useState(true);
+  const [showVideo, setShowVideo] = useState(true);
+  const [showAudio, setShowAudio] = useState(true);
   const scrollRef = useRef(null);
   const mediaById = Object.fromEntries(project.media.map((m) => [m.id, m]));
   const layout = videoLayout(project.videoClips);
@@ -96,7 +99,10 @@ export default function Timeline({ project, time, duration, selection, onSelect,
       <div className="tl-toolbar">
         <button onClick={onSplit} title="Ctrl+B / S">✂ Split</button>
         <button onClick={onDelete} disabled={!selection} title="Delete">🗑 Delete</button>
-        <button onClick={onAddText}>T+ Texte</button>
+        <button onClick={onAddText}>T+ Text</button>
+        <button onClick={() => setShowText((v) => !v)}>{showText ? 'Hide text track' : 'Show text track'}</button>
+        <button onClick={() => setShowVideo((v) => !v)}>{showVideo ? 'Hide video track' : 'Show video track'}</button>
+        <button onClick={() => setShowAudio((v) => !v)}>{showAudio ? 'Hide audio track' : 'Show audio track'}</button>
         <div className="spacer" />
         <span className="dim">Zoom</span>
         <input type="range" min="10" max="300" value={pps} onChange={(e) => setPps(Number(e.target.value))} />

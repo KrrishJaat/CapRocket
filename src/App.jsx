@@ -14,6 +14,7 @@ export default function App() {
   const [selection, setSelection] = useState(null); // { track, id }
   const [exporting, setExporting] = useState(null);
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+  const [verticalLayout, setVerticalLayout] = useState(false);
   const duration = projectDuration(project);
 
   const [seekVer, setSeekVer] = useState(0);

@@ -14,8 +14,8 @@ export function captionsToSrt(captions = []) {
     const start = Number(caption.start ?? caption.from ?? 0);
     const end = Number(caption.end ?? caption.to ?? start);
     const text = String(caption.text ?? caption.word ?? '').trim();
-    return text ? `${index + 1}\\n${formatSrtTime(start)} --> ${formatSrtTime(end)}\\n${text}` : null;
-  }).filter(Boolean).join('\\n\\n') + (captions.length ? '\\n' : '');
+    return text ? `${index + 1}\n${formatSrtTime(start)} --> ${formatSrtTime(end)}\n${text}` : null;
+  }).filter(Boolean).join('\n\n') + (captions.length ? '\n' : '');
 }
 
 export default function ExportDialog({ state, onCancel, onClose, onShow }) {

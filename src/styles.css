@@ -129,7 +129,7 @@ input[type='range'] { accent-color: var(--accent); width: 100%; }
 .clip .handle:hover { background: #ffffff22 !important; }
 .handle.left { left: 0; }
 .handle.right { right: 0; }
-.clip.selected .handle { background: #ffffff55; }
+.clip.selected .handle { background: transparent; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--accent); pointer-events: none; z-index: 4; }
 .playhead::before { content: ''; position: absolute; top: 0; left: -5px; border: 6px solid transparent; border-top-color: var(--accent); }
 

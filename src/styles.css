@@ -8,7 +8,7 @@
   --accent: #22c3d6;
   --video: #2a6f97;
   --text-clip: #7b4fc9;
-  --audio: #2e8b57;
+  --audio: #426f79;
 }
 
 * { box-sizing: border-box; }
@@ -122,7 +122,11 @@ input[type='range'] { accent-color: var(--accent); width: 100%; }
 .clip.audio { background: var(--audio); }
 .clip.selected { border-color: #fff; }
 .clip-label { flex: 1; padding: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; pointer-events: none; }
-.handle { position: absolute; top: 0; bottom: 0; width: 8px; cursor: ew-resize; z-index: 1; }
+.handle { position: absolute; top: 0; bottom: 0; width: 10px; cursor: ew-resize; z-index: 2; background: transparent !important; }
+.clip:has(.handle:hover) { border-color: transparent !important; outline: 0 !important; }
+.clip:has(.handle:hover) { cursor: ew-resize; }
+.clip.selected .handle { background: transparent; }
+.clip .handle:hover { background: #ffffff22 !important; }
 .handle.left { left: 0; }
 .handle.right { right: 0; }
 .clip.selected .handle { background: #ffffff55; }
